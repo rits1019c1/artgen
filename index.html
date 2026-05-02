@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- OGP Tags -->
+    <meta property="og:title" content="NEW GLYPH GEN - 未定義記号の生成">
+    <meta property="og:description" content="既存の記号を解体・再構築し、新しい意味を持つ記号をデザインするためのインスピレーション。">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>NEW GLYPH GEN - 未定義記号の生成</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;900&family=Noto+Sans+JP:wght@100;400;900&family=Noto+Serif+JP:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+        .idea-display {
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glyph-preview {
+            font-family: 'Noto Serif JP', serif;
+            background: linear-gradient(180deg, #ffffff 0%, #444444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));
+            display: inline-block;
+            transform: scale(1.2);
+        }
+        .btn-main {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .btn-main:hover {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.2;
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scan {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+        .bg-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-8">
+    <div class="bg-glow"></div>
+    <div class="scan-line"></div>
+
+    <nav class="fixed top-0 left-0 w-full p-8 flex justify-between items-start">
+        <div>
+            <h1 class="text-[10px] font-black tracking-[0.5em] uppercase opacity-40">Glyph Lab v7.0</h1>
+        </div>
+        <div class="text-[10px] opacity-20 text-right uppercase tracking-[0.2em] leading-loose">
+            Deconstructing Typography<br>
+            Synthesizing New Meaning
+        </div>
+    </nav>
+
+    <main class="w-full max-w-5xl relative z-10">
+        <div id="idea-card" class="idea-display opacity-0 translate-y-8">
+            <div class="mb-8">
+                <span class="text-[9px] font-bold tracking-[0.6em] text-white/30 uppercase border-l border-white/20 pl-4 italic">Concept Extraction Mode</span>
+            </div>
+            
+            <div id="idea-content" class="text-5xl md:text-8xl font-black leading-[1.2] tracking-tighter mb-24">
+                <!-- 生成されたテキスト -->
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-10 items-start md:items-center">
+                <button id="generate-btn" class="btn-main px-12 py-6 text-[10px] font-bold tracking-[0.4em] uppercase bg-white/5">
+                    GENERATE NEW GLYPH
+                </button>
+                
+                <button id="copy-btn" class="text-[9px] font-bold tracking-[0.3em] opacity-30 hover:opacity-100 transition-opacity uppercase">
+                    Copy Metadata
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 w-full p-8 flex justify-between items-center text-[9px] tracking-[0.4em] text-white/10 uppercase">
+        <div>Archetype: Experimental</div>
+        <div>Visualizing the Unspoken</div>
+    </footer>
+
+    <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] px-8 py-4 tracking-[0.3em] opacity-0 transition-all duration-500 pointer-events-none uppercase font-bold z-50">
+        Copied to clipboard
+    </div>
+
+    <script>
+        const bases = [
+            "無限に連鎖する", "フラクタル構造を持つ", "一画で完結しない", "円環状に閉じた",
+            "左右非対称に歪んだ", "三次元的に重なり合う", "時間軸で形状が変化する",
+            "観測者の視線で形を変える", "中心点を持たない", "自己崩壊し続ける",
+            "鏡像として成立しない", "重力に従わない", "光を内部に透過させる",
+            "低周波の音が鳴り響く", "全ての意味を拒絶する", "数学的に描写不可能な",
+            "周囲の感情を吸い込む", "記憶の断片を結合する", "脈動する"
+        ];
+
+        // 実際の記号を使用したリスト
+        const glyphs = [
+            "？", "！", "‽", "。", "＆", "；", "＊", "∞", "（ ）", "／", "〜", 
+            "©", "￥", "＄", "€", "＃", "＠", "†", "§", "¶", "†", "‡", "◊",
+            "∑", "∆", "µ", "Ω", "π", "±", "≠", "≈", "√", "∂", "∫"
+        ];
+
+        const methods = [
+            "を垂直に合体させた新記号", "を再帰的に積層した新記号", "を熱で溶解させて混ぜた新記号",
+            "を極限まで引き伸ばして細分化した記号", "を反転させて対数的に重ねた記号", 
+            "を一定の周期で断片化した記号", "を幾何学的に解体し再接続した記号", 
+            "を三重複合させて一塊にした記号", "をDNAの二重螺旋のように編み込んだ記号",
+            "を影（シルエット）だけ残して透過させた記号", "を1bitのドット絵として再構成した記号",
+            "を宇宙の背景放射をガイドに配置した記号", "を法律で禁止された角度で交差させた記号",
+            "を人間の鼓動に合わせて歪ませた記号"
+        ];
+
+        const ideaCard = document.getElementById('idea-card');
+        const ideaContent = document.getElementById('idea-content');
+        const generateBtn = document.getElementById('generate-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const toast = document.getElementById('toast');
+
+        function generate() {
+            ideaCard.style.opacity = '0';
+            ideaCard.style.transform = 'translateY(15px)';
+
+            setTimeout(() => {
+                const b = bases[Math.floor(Math.random() * bases.length)];
+                
+                // 記号を1つまたは2つ選ぶ
+                let selectedGlyphs = "";
+                let g1 = glyphs[Math.floor(Math.random() * glyphs.length)];
+                if (Math.random() > 0.5) {
+                    let g2 = glyphs[Math.floor(Math.random() * glyphs.length)];
+                    while(g1 === g2) g2 = glyphs[Math.floor(Math.random() * glyphs.length)];
+                    selectedGlyphs = `${g1}と${g2}`;
+                } else {
+                    selectedGlyphs = g1;
+                }
+
+                const m = methods[Math.floor(Math.random() * methods.length)];
+                
+                // 記号表示部分に専用のクラスを適用
+                ideaContent.innerHTML = `${b}<span class="glyph-preview mx-6 px-2">${selectedGlyphs}</span><br>${m}`;
+                
+                ideaCard.style.opacity = '1';
+                ideaCard.style.transform = 'translateY(0)';
+            }, 400);
+        }
+
+        function showToast() {
+            toast.style.opacity = 1;
+            toast.style.top = "48px";
+            setTimeout(() => {
+                toast.style.opacity = 0;
+                toast.style.top = "40px";
+            }, 1500);
+        }
+
+        generateBtn.addEventListener('click', generate);
+
+        copyBtn.addEventListener('click', () => {
+            const text = ideaContent.innerText;
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast();
+        });
+
+        // Initial generation
+        window.onload = generate;
+    </script>
+</body>
+</html>
